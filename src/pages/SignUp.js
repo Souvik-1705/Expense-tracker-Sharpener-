@@ -36,7 +36,7 @@ function SignUp() {
             <input type='password' placeholder='Enter your password'value={password} onChange={(e)=>setPassword(e.target.value)}/>
             <input type='password' placeholder='Enter your confirm password'value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)}/>
             <button className='signUp-btn'>Sign Up</button>
-            <p>Have an Account?? <a href='/login'>Login</a></p>
+            <p>Have an Account? <a href='/login'>Login</a></p>
         </form>
     </div>
   )
