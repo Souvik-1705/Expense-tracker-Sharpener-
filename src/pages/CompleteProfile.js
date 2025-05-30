@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { updateProfile } from "firebase/auth"; 
 import { auth } from '../Firebase';
 import "../styles/CompleteProfile.css";
@@ -9,6 +9,38 @@ function CompleteProfile() {
   const [photoUrl, setPhotoUrl] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const idToken = await auth.currentUser.getIdToken();
+      try {
+        const res = await fetch(
+          "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCDmXL7rGHKZqsGV4syUI5r8qYfEkpoSZg",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              idToken: idToken,
+            }),
+          }
+        );
+
+        const data = await res.json();
+        if (data && data.users && data.users.length > 0) {
+          const user = data.users[0];
+          setName(user.displayName || "");
+          setPhotoUrl(user.photoUrl || "");
+        }
+      } catch (err) {
+        console.log("Error fetching profile:", err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
 
   const handleUpdate = async (e) => {
