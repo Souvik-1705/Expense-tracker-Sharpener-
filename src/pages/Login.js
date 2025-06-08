@@ -37,7 +37,7 @@ function Login() {
             <input type='email' placeholder='Enter your email' value={email} onChange={(e)=>setEmail(e.target.value)}/>
             <input type='password' placeholder='Enter your password' value={password} onChange={(e)=>setPassword(e.target.value)}/>
             <button type='submit'>Login</button>
-            <a href="">Forgot Password?</a>
+            <a href="forgotPassword">Forgot Password?</a>
             <p>Don't have an account? <a href="/signUp">Sign Up</a></p>
         </form>
     </div>
