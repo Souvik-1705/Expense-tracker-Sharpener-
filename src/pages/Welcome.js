@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "../styles/Welcome.css";
 import VerifyEmail from "./VerifyEmail";
+import ExpenseForm from "./ExpenseForm";
 
 function Welcome() {
   const navigate=useNavigate();
@@ -22,6 +23,7 @@ function Welcome() {
       <p>Your profile is incomplete</p>
       <button onClick={handleCompleteProfile}>Complete Profile</button>
       <VerifyEmail/>
+      <ExpenseForm/>
     </div>
   )
 }
