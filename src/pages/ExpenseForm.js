@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import "../styles/ExpenseForm.css";
+import { database } from '../Firebase';
+import { ref, push, get, child } from 'firebase/database';
 
 function ExpenseForm() {
     const[expenses,setExpenses]=useState([]);
@@ -7,7 +9,27 @@ function ExpenseForm() {
     const[description,setDescription]=useState("");
     const[category,setCategory]=useState("");
 
-    const handleSubmit=(e)=>{
+    useEffect(()=>{
+        const fetchExpenses= async()=>{
+            try {
+                const dbRef=ref(database);
+                const snapshot=await get(child(dbRef,"expenses"));
+                if (snapshot.exists()) {
+          const data = snapshot.val();
+          const expenseList = Object.keys(data).map((key) => ({
+            id: key,
+            ...data[key],
+          }));
+          setExpenses(expenseList);
+        }
+            } catch (error) {
+                console.error('Error fetching expenses:', err);
+            }
+        }
+        fetchExpenses();
+    },[])
+
+    const handleSubmit=async(e)=>{
         e.preventDefault();
         if(!amount || !description || !category){
             alert("Please fill in all fields");
@@ -20,10 +42,19 @@ function ExpenseForm() {
       category,
     };
 
-    setExpenses([...expenses, newExpense]);
-    setAmount('');
-    setDescription('');
-    setCategory('');
+    try {
+        const expenseRef = ref(database, 'expenses');
+        const res = await push(expenseRef, newExpense);
+         if (res.key) {
+        setExpenses([...expenses, { id: res.key, ...newExpense }]);
+        setAmount('');
+        setDescription('');
+        setCategory('');
+      }
+
+    } catch (err) {
+        console.error('Error adding expense:', err);
+    }
   };
 
   return (
